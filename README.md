@@ -42,3 +42,8 @@ Optional arguments
 -df <Set the minimum depth for gene-variants, based on depth relative to highest depth gene from the same gene-group. Value between 0.0 and 1.0. Default 0.0>
 -sct <Skip creation of smaller Nanopore files, if they already exist. 1 to skip>
 -sk <Skip KMA, if it has already been run previously. 1 to skip>
+```
+
+## Pipeline workflow
+
+![alt text](https://github.com/CWestergaard/NanoporeFiltrationCompare/blob/master/NanoporeFiltrationCompare_Workflow.png)
