@@ -4,7 +4,7 @@ Description: Wrapper to run the full Nanopore filtration and AMR comparison with
 Version: 1.0
 Author: Casper Westergaard
 Example string:
-python3 /srv/data/AS/CASW/scripts/Wrapper/GitHub/NanoporeFiltrationCompare.py -i /srv/data/AS/CASW/data/q8_subset/ -o /srv/data/AS/CASW/resultater/q8_subset/ -gs 5m -cl 1,2,3,4,5,6,7,8,9,10,15,20,30,40,50,60 -md 0.2 -df 0.45 -ip /srv/data/AS/CASW/data/phenotypes.txt -op /srv/data/AS/CASW/resultater/Plots -refdb /srv/data/DB/kma/resfinder_db -sct 1
+python3 /srv/data/AS/CASW/scripts/Wrapper/GitHub/NanoporeFiltrationCompare.py -i /srv/data/AS/CASW/data/q8_subset/ -o /srv/data/AS/CASW/resultater/q8_subset/ -gs 5m -cl 1,2,3,4,5,6,7,8,9,10,15,20,30,40,50,60 -md 0.2 -df 0.45 -ip /srv/data/AS/CASW/data/phenotypes.txt -op /srv/data/AS/CASW/resultater/Plots -refdb /srv/data/DB/kma/resfinder_db -ext .chop.q8 -sct 1
 """
 
 #Import Libraries
@@ -43,6 +43,8 @@ parser.add_argument('-id', type=float, dest='identity_cutoff', default='90',
                     help='Minimum identity for genes to be included, default 90, input value between 0 and 100', required=False)
 parser.add_argument('-cov', type=float, dest='coverage_cutoff', default='90',
                     help='Minimum coverage for genes to be included, default 90, input value between 0 and 100', required=False)
+parser.add_argument('-ext', type=str, dest='extension',
+                    help='Extension between Isolate name and \'.fastq.gz\' in input files, if any', required=False)
 parser.add_argument('-sct', type=int, dest='skip_coverage_timesort', default='0', 
                     help='Skip coverage_timesort script, if files have already been created. -sct 1 to skip', required=False)
 parser.add_argument('-sk', type=int, dest='skip_kma', default='0', 
@@ -66,9 +68,10 @@ if args.skip_coverage_timesort == 0:
     print('STEP 1 - Coverage Timesort')
     for i in range(len(isolate_folders)):
         output_path = '{}{}'.format(args.input_folder,isolate_folders[i])
-        input_file = '{}{}/{}.chop.q8.fastq.gz'.format(args.input_folder,isolate_folders[i],isolate_folders[i])
-        if not os.path.isfile(input_file):
-            input_file = '{}{}/{}.q8.fastq.gz'.format(args.input_folder,isolate_folders[i],isolate_folders[i]) # No .chop
+        if args.extension:
+            input_file = '{}{}/{}{}.fastq.gz'.format(args.input_folder, isolate_folders[i], isolate_folders[i], args.extension)
+        else:
+            input_file = '{}{}/{}.fastq.gz'.format(args.input_folder, isolate_folders[i], isolate_folders[i])
 
         script_path = os.path.join(dirname, 'CoverageTimesort.py')   
         print('Running script on: {}'.format(isolate_folders[i]))
